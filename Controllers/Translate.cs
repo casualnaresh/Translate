@@ -38,11 +38,17 @@ namespace Translate.Controllers
                 request.Headers.Add("Ocp-Apim-Subscription-Region", "canadacentral");
                 request.Headers.Add("X-ClientTraceId", Guid.NewGuid().ToString());
 
-                var response =  client.SendAsync(request).Result;
+            //     var response =  client.SendAsync(request).Result;
             
-                var responseBody = response.Content.ReadAsStringAsync();
+            //     var responseBody = response.Content.ReadAsStringAsync();
                 
-            return responseBody.Result;
+            // return responseBody.Result;
+                var response = client.SendAsync(request).Result;
+                var responseBody = response.Content.ReadAsStringAsync();
+
+                var result = JsonConvert.DeserializeObject<List<Dictionary<string, List<Dictionary<string, string>>>>>(responseBody.Result);
+                string displayText = "Input Text in English: " + text + "\nTranslated Text in French: " + result[0]["translations"][0]["text"];
+                return displayText;
 
         }
     }
